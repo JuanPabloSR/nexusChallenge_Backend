@@ -1,4 +1,4 @@
-package com.nexus.inventory.model;
+package com.nexus.inventory.model.position;
 
 import jakarta.persistence.*;
 import lombok.Data;

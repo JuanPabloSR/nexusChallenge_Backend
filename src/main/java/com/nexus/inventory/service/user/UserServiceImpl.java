@@ -1,15 +1,22 @@
 package com.nexus.inventory.service.user;
 
-import com.nexus.inventory.model.User;
-import com.nexus.inventory.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.nexus.inventory.exceptions.RequestException;
+import com.nexus.inventory.model.user.User;
+import com.nexus.inventory.repository.user.UserRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
 
     @Override
     public User saveUser(User user) {
@@ -28,6 +35,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long userId) {
+        if (!userRepository.existsById(userId)){
+            throw new RequestException(HttpStatus.NOT_FOUND, "The User you wish to delete does not exist");
+        }
         userRepository.deleteById(userId);
     }
 }

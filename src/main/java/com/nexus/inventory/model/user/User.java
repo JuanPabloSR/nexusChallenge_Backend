@@ -1,5 +1,6 @@
-package com.nexus.inventory.model;
+package com.nexus.inventory.model.user;
 
+import com.nexus.inventory.model.position.Position;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,12 +1,13 @@
 package com.nexus.inventory.service.position;
 
-import com.nexus.inventory.exceptions.PositionNotFoundException;
-import com.nexus.inventory.model.Position;
-import com.nexus.inventory.repository.PositionRepository;
-import com.nexus.inventory.service.position.PositionService;
+import com.nexus.inventory.exceptions.RequestException;
+import com.nexus.inventory.model.position.Position;
+import com.nexus.inventory.repository.position.PositionRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PositionServiceImpl implements PositionService {
@@ -25,7 +26,7 @@ public class PositionServiceImpl implements PositionService {
     @Override
     public void deletePosition(Long positionId) {
         if(!positionRepository.existsById(positionId)){
-            throw new PositionNotFoundException("The position you wish to delete does not exist");
+            throw new RequestException(HttpStatus.NOT_FOUND, "The position you wish to delete does not exist");
         }
         positionRepository.deleteById(positionId);
     }
@@ -33,5 +34,10 @@ public class PositionServiceImpl implements PositionService {
     @Override
     public List<Position> findAllPositions() {
         return positionRepository.findAll();
+    }
+
+    @Override
+    public Optional<Position> findById(Long positionId) {
+        return positionRepository.findById(positionId);
     }
 }

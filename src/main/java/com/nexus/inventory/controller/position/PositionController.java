@@ -1,7 +1,7 @@
-package com.nexus.inventory.controller;
+package com.nexus.inventory.controller.position;
 
-import com.nexus.inventory.exceptions.PositionNotFoundException;
-import com.nexus.inventory.model.Position;
+import com.nexus.inventory.exceptions.RequestException;
+import com.nexus.inventory.model.position.Position;
 import com.nexus.inventory.service.position.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ public class PositionController {
         try {
             return new ResponseEntity<>(positionService.savePosition(position), HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RequestException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -29,7 +29,7 @@ public class PositionController {
         try {
             return ResponseEntity.ok(positionService.findAllPositions());
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RequestException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
@@ -38,11 +38,9 @@ public class PositionController {
     public ResponseEntity<?> deletePosition(@PathVariable Long positionId) {
         try {
             positionService.deletePosition(positionId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (PositionNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Position successfully deleted",HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RequestException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 

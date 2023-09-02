@@ -1,6 +1,6 @@
-package com.nexus.inventory.repository;
+package com.nexus.inventory.repository.user;
 
-import com.nexus.inventory.model.User;
+import com.nexus.inventory.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
