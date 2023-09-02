@@ -1,4 +1,4 @@
-package com.nexus.inventory.service;
+package com.nexus.inventory.service.position;
 
 import com.nexus.inventory.model.Position;
 
