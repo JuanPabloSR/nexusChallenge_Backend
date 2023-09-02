@@ -33,7 +33,11 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     public List<Position> getAllPositions() {
-        return positionRepository.findAll();
+        List<Position> positions = positionRepository.findAll();
+        if (positions.isEmpty()) {
+            throw new RequestException(HttpStatus.NOT_FOUND, "No positions exist");
+        }
+        return positions;
     }
 
     @Override
