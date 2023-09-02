@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/position")
 public class PositionController {
@@ -17,32 +19,20 @@ public class PositionController {
 
     @PostMapping
     public ResponseEntity<?> savePosition(@RequestBody Position position) {
-        try {
-            return new ResponseEntity<>(positionService.savePosition(position), HttpStatus.CREATED);
-        } catch (Exception e) {
-            throw new RequestException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
+        Position savedPosition = positionService.savePosition(position);
+        return new ResponseEntity<>(savedPosition, HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<?> getAllPositions() {
-        try {
-            return ResponseEntity.ok(positionService.findAllPositions());
-        } catch (Exception e) {
-            throw new RequestException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
+        List<Position> positions = positionService.getAllPositions();
+        return ResponseEntity.ok(positions);
     }
-
 
     @DeleteMapping("{positionId}")
     public ResponseEntity<?> deletePosition(@PathVariable Long positionId) {
-        try {
-            positionService.deletePosition(positionId);
-            return new ResponseEntity<>("Position successfully deleted",HttpStatus.OK);
-        } catch (Exception e) {
-            throw new RequestException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
+        positionService.deletePosition(positionId);
+        return new ResponseEntity<>("Position successfully deleted", HttpStatus.OK);
     }
-
 
 }

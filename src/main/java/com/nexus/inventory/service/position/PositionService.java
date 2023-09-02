@@ -11,7 +11,7 @@ public interface PositionService {
 
     void deletePosition(Long positionId);
 
-    List<Position> findAllPositions();
+    List<Position> getAllPositions();
 
     Optional<Position> findById(Long positionId);
 }

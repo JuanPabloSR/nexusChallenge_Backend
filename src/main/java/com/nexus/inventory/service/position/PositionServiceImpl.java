@@ -14,7 +14,7 @@ public class PositionServiceImpl implements PositionService {
 
     private final PositionRepository positionRepository;
 
-    public PositionServiceImpl(PositionRepository positionRepository){
+    public PositionServiceImpl(PositionRepository positionRepository) {
         this.positionRepository = positionRepository;
     }
 
@@ -25,14 +25,14 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     public void deletePosition(Long positionId) {
-        if(!positionRepository.existsById(positionId)){
+        if (!positionRepository.existsById(positionId)) {
             throw new RequestException(HttpStatus.NOT_FOUND, "The position you wish to delete does not exist");
         }
         positionRepository.deleteById(positionId);
     }
 
     @Override
-    public List<Position> findAllPositions() {
+    public List<Position> getAllPositions() {
         return positionRepository.findAll();
     }
 

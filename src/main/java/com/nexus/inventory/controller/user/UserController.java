@@ -1,8 +1,6 @@
 package com.nexus.inventory.controller.user;
 
 import com.nexus.inventory.dtos.user.UserDTO;
-import com.nexus.inventory.exceptions.RequestException;
-import com.nexus.inventory.model.position.Position;
 import com.nexus.inventory.model.user.User;
 import com.nexus.inventory.service.position.PositionService;
 import com.nexus.inventory.service.user.UserService;
@@ -12,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/user")
@@ -26,55 +23,32 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
-            Optional<Position> optionalPosition = positionService.findById(userDTO.getPositionId());
+        User savedUser = userService.saveUser(userDTO);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    }
 
-            if (optionalPosition.isPresent()) {
-                Position position = optionalPosition.get();
-
-                User user = new User();
-                user.setName(userDTO.getName());
-                user.setAge(userDTO.getAge());
-                user.setPosition(position);
-                user.setJoinDate(userDTO.getJoinDate());
-
-                User savedUser = userService.saveUser(user);
-                return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
-            } else {
-                throw new RequestException(HttpStatus.BAD_REQUEST, "The position does not exist");
-            }
-
+    @PutMapping("/{userId}")
+    public ResponseEntity<?> editUser(@PathVariable Long userId, @RequestBody UserDTO updateUserDTO) {
+        User updatedUser = userService.editUser(userId, updateUserDTO);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserById(@PathVariable Long userId) {
         User user = userService.findById(userId);
-
-        if (user != null) {
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        } else {
-            throw new RequestException(HttpStatus.NOT_FOUND, "User not found");
-        }
-
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<?> getAllUsers() {
-        try {
-            List<User> users = userService.findAllUsers();
-            return new ResponseEntity<>(users, HttpStatus.OK);
-        } catch (Exception e) {
-            throw new RequestException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
+        List<User> users = userService.findAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteUserById(@PathVariable Long userId) {
-        try {
-            userService.deleteUser(userId);
-            return new ResponseEntity<>("User successfully deleted", HttpStatus.OK);
-        } catch (Exception e) {
-            throw new RequestException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
+        userService.deleteUser(userId);
+        return new ResponseEntity<>("User successfully deleted", HttpStatus.OK);
     }
 
 }
