@@ -3,6 +3,7 @@ package com.nexus.inventory.service.merchandise;
 import com.nexus.inventory.dtos.merchandise.MerchandiseDTO;
 import com.nexus.inventory.model.merchandise.Merchandise;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface MerchandiseService {
@@ -15,5 +16,7 @@ public interface MerchandiseService {
 
     List<Merchandise> findAllMerchandise();
 
-    void deleteMerchandise(Long merchandiseId);
+    void deleteMerchandise(Long id, Long merchandiseId);
+
+    List<Merchandise> findAllMerchandiseByEntryDate(LocalDate entryDate);
 }

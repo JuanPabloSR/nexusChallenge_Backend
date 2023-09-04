@@ -4,11 +4,14 @@ import com.nexus.inventory.dtos.merchandise.MerchandiseDTO;
 import com.nexus.inventory.model.merchandise.Merchandise;
 import com.nexus.inventory.service.merchandise.MerchandiseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/merchandise")
@@ -36,15 +39,19 @@ public class MerchandiseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Merchandise>> getAllMerchandise() {
-        List<Merchandise> merchandiseList = merchandiseService.findAllMerchandise();
+    public ResponseEntity<List<Merchandise>> getAllMerchandise(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate entryDate) {
+        List<Merchandise> merchandiseList = merchandiseService.findAllMerchandiseByEntryDate(entryDate);
         return new ResponseEntity<>(merchandiseList, HttpStatus.OK);
     }
 
+
     @DeleteMapping("/{merchandiseId}")
-    public ResponseEntity<String> deleteMerchandise(@PathVariable Long merchandiseId) {
-        merchandiseService.deleteMerchandise(merchandiseId);
+    public ResponseEntity<String> deleteMerchandise(@PathVariable Long merchandiseId, @RequestBody Map<String, Long> requestBody) {
+        Long userId = requestBody.get("userId");
+        merchandiseService.deleteMerchandise(merchandiseId, userId);
         return new ResponseEntity<>("Merchandise successfully deleted", HttpStatus.OK);
     }
+
 
 }

@@ -76,9 +76,10 @@ public class MerchandiseServiceImpl implements MerchandiseService {
         return merchandiseRepository.save(merchandiseToUpdate);
     }
 
+
     private Merchandise getMerchandiseOrThrow(Long merchandiseId) {
         return merchandiseRepository.findById(merchandiseId)
-                .orElseThrow(() -> new RequestException(HttpStatus.NOT_FOUND, "The merchandise you want to edit does not exist"));
+                .orElseThrow(() -> new RequestException(HttpStatus.NOT_FOUND, "The merchandise you provided does not exist"));
     }
 
     private void updateMerchandiseFromDTO(Merchandise merchandiseToUpdate, MerchandiseDTO updateMerchandiseDTO, User editedBy, LocalDate entryDate) {
@@ -97,6 +98,20 @@ public class MerchandiseServiceImpl implements MerchandiseService {
 
 
     @Override
+    public List<Merchandise> findAllMerchandiseByEntryDate(LocalDate entryDate) {
+        if (entryDate != null) {
+            List<Merchandise> merchandiseList = merchandiseRepository.findByEntryDate(entryDate);
+            if (merchandiseList.isEmpty()) {
+                throw new RequestException(HttpStatus.NOT_FOUND, "No merchandise exists for the provided entryDate");
+            }
+            return merchandiseList;
+        } else {
+            // Si no se proporciona el filtro, simplemente llama a findAllMerchandise
+            return findAllMerchandise();
+        }
+    }
+
+    @Override
     public List<Merchandise> findAllMerchandise() {
         List<Merchandise> merchandiseList = merchandiseRepository.findAll();
         if (merchandiseList.isEmpty()) {
@@ -105,10 +120,14 @@ public class MerchandiseServiceImpl implements MerchandiseService {
         return merchandiseList;
     }
 
+
+
     @Override
-    public void deleteMerchandise(Long merchandiseId) {
-        if (!merchandiseRepository.existsById(merchandiseId)) {
-            throw new RequestException(HttpStatus.NOT_FOUND, "The Merchandise you wish to delete does not exist");
+    public void deleteMerchandise(Long merchandiseId, Long userId) {
+        Merchandise merchandise = getMerchandiseOrThrow(merchandiseId);
+
+        if (!merchandise.getRegisteredBy().getId().equals(userId)) {
+            throw new RequestException(HttpStatus.FORBIDDEN, "You are not authorized to delete this merchandise");
         }
         merchandiseRepository.deleteById(merchandiseId);
     }
