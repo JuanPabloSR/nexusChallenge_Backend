@@ -98,28 +98,36 @@ public class MerchandiseServiceImpl implements MerchandiseService {
 
 
     @Override
-    public List<Merchandise> findAllMerchandiseByEntryDate(LocalDate entryDate) {
+    public List<Merchandise> findAllMerchandise(LocalDate entryDate, String productName) {
         if (entryDate != null) {
-            List<Merchandise> merchandiseList = merchandiseRepository.findByEntryDate(entryDate);
+            return findAllMerchandiseByEntryDate(entryDate);
+        } else if (productName != null) {
+            return findAllMerchandiseByProductName(productName);
+        } else {
+            List<Merchandise> merchandiseList = merchandiseRepository.findAll();
             if (merchandiseList.isEmpty()) {
-                throw new RequestException(HttpStatus.NOT_FOUND, "No merchandise exists for the provided entryDate");
+                throw new RequestException(HttpStatus.NOT_FOUND, "No merchandise exists");
             }
             return merchandiseList;
-        } else {
-            // Si no se proporciona el filtro, simplemente llama a findAllMerchandise
-            return findAllMerchandise();
         }
     }
 
-    @Override
-    public List<Merchandise> findAllMerchandise() {
-        List<Merchandise> merchandiseList = merchandiseRepository.findAll();
+    public List<Merchandise> findAllMerchandiseByEntryDate(LocalDate entryDate) {
+        List<Merchandise> merchandiseList = merchandiseRepository.findByEntryDate(entryDate);
         if (merchandiseList.isEmpty()) {
-            throw new RequestException(HttpStatus.NOT_FOUND, "No merchandise exists");
+            throw new RequestException(HttpStatus.NOT_FOUND, "No merchandise exists for the provided entryDate");
         }
         return merchandiseList;
     }
 
+    @Override
+    public List<Merchandise> findAllMerchandiseByProductName(String searchTerm) {
+        List<Merchandise> merchandiseList = merchandiseRepository.findByProductName(searchTerm);
+        if (merchandiseList.isEmpty()) {
+            throw new RequestException(HttpStatus.NOT_FOUND, "No merchandise exists for the provided productName or userName");
+        }
+        return merchandiseList;
+    }
 
 
     @Override

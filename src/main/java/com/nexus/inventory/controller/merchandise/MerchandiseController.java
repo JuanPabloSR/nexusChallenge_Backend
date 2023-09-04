@@ -40,8 +40,9 @@ public class MerchandiseController {
 
     @GetMapping
     public ResponseEntity<List<Merchandise>> getAllMerchandise(
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate entryDate) {
-        List<Merchandise> merchandiseList = merchandiseService.findAllMerchandiseByEntryDate(entryDate);
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate entryDate,
+            @RequestParam(required = false) String searchTerm) {
+        List<Merchandise> merchandiseList = merchandiseService.findAllMerchandise(entryDate, searchTerm);
         return new ResponseEntity<>(merchandiseList, HttpStatus.OK);
     }
 
