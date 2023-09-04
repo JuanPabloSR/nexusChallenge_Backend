@@ -6,6 +6,8 @@ import com.nexus.inventory.model.merchandise.Merchandise;
 import com.nexus.inventory.model.user.User;
 import com.nexus.inventory.repository.merchandise.MerchandiseRepository;
 import com.nexus.inventory.service.user.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -93,40 +95,46 @@ public class MerchandiseServiceImpl implements MerchandiseService {
     @Override
     public Merchandise findById(Long merchandiseId) {
         return merchandiseRepository.findById(merchandiseId)
-                .orElseThrow(() ->new  RequestException(HttpStatus.NOT_FOUND, "Merchandise by id:" + merchandiseId + " not found"));
+                .orElseThrow(() -> new RequestException(HttpStatus.NOT_FOUND, "Merchandise by id:" + merchandiseId + " not found"));
     }
 
 
-    @Override
-    public List<Merchandise> findAllMerchandise(LocalDate entryDate, String productName) {
+    public Page<Merchandise> findAllMerchandise(LocalDate entryDate, String productName, Pageable pageable) {
         if (entryDate != null) {
-            return findAllMerchandiseByEntryDate(entryDate);
+            return findAllMerchandiseByEntryDate(entryDate, pageable);
         } else if (productName != null) {
-            return findAllMerchandiseByProductName(productName);
+            return findAllMerchandiseByProductName(productName, pageable);
         } else {
-            List<Merchandise> merchandiseList = merchandiseRepository.findAll();
-            if (merchandiseList.isEmpty()) {
-                throw new RequestException(HttpStatus.NOT_FOUND, "No merchandise exists");
-            }
-            return merchandiseList;
+            return findAllMerchandiseWithPageable(pageable);
         }
     }
 
-    public List<Merchandise> findAllMerchandiseByEntryDate(LocalDate entryDate) {
-        List<Merchandise> merchandiseList = merchandiseRepository.findByEntryDate(entryDate);
-        if (merchandiseList.isEmpty()) {
+
+    private Page<Merchandise> findAllMerchandiseWithPageable(Pageable pageable) {
+        Page<Merchandise> merchandisePage = merchandiseRepository.findAll(pageable);
+        if (merchandisePage.isEmpty()) {
+            throw new RequestException(HttpStatus.NOT_FOUND, "No merchandise exists");
+        }
+        return merchandisePage;
+    }
+
+
+
+    public Page<Merchandise> findAllMerchandiseByEntryDate(LocalDate entryDate, Pageable pageable) {
+        Page<Merchandise> merchandisePage = merchandiseRepository.findByEntryDate(entryDate, pageable);
+        if (merchandisePage.isEmpty()) {
             throw new RequestException(HttpStatus.NOT_FOUND, "No merchandise exists for the provided entryDate");
         }
-        return merchandiseList;
+        return merchandisePage;
     }
 
     @Override
-    public List<Merchandise> findAllMerchandiseByProductName(String searchTerm) {
-        List<Merchandise> merchandiseList = merchandiseRepository.findByProductName(searchTerm);
-        if (merchandiseList.isEmpty()) {
+    public Page<Merchandise> findAllMerchandiseByProductName(String searchTerm, Pageable pageable) {
+        Page<Merchandise> merchandisePage = merchandiseRepository.findByProductName(searchTerm, pageable);
+        if (merchandisePage.isEmpty()) {
             throw new RequestException(HttpStatus.NOT_FOUND, "No merchandise exists for the provided productName or userName");
         }
-        return merchandiseList;
+        return merchandisePage;
     }
 
 

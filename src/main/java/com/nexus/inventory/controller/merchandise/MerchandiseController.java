@@ -4,6 +4,9 @@ import com.nexus.inventory.dtos.merchandise.MerchandiseDTO;
 import com.nexus.inventory.model.merchandise.Merchandise;
 import com.nexus.inventory.service.merchandise.MerchandiseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,12 +42,15 @@ public class MerchandiseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Merchandise>> getAllMerchandise(
+    public ResponseEntity<Page<Merchandise>> getAllMerchandise(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate entryDate,
-            @RequestParam(required = false) String searchTerm) {
-        List<Merchandise> merchandiseList = merchandiseService.findAllMerchandise(entryDate, searchTerm);
-        return new ResponseEntity<>(merchandiseList, HttpStatus.OK);
+            @RequestParam(required = false) String searchTerm,
+            @PageableDefault(size = 10, sort = "id") Pageable pageable) {
+        Page<Merchandise> merchandisePage = merchandiseService.findAllMerchandise(entryDate, searchTerm, pageable);
+        return new ResponseEntity<>(merchandisePage, HttpStatus.OK);
     }
+
+
 
 
     @DeleteMapping("/{merchandiseId}")

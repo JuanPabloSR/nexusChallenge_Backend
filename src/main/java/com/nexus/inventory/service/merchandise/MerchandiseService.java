@@ -2,6 +2,8 @@ package com.nexus.inventory.service.merchandise;
 
 import com.nexus.inventory.dtos.merchandise.MerchandiseDTO;
 import com.nexus.inventory.model.merchandise.Merchandise;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -16,13 +18,12 @@ public interface MerchandiseService {
 
     Merchandise updateMerchandise(Long merchandiseId, MerchandiseDTO updateMerchandiseDto);
 
-    List<Merchandise> findAllMerchandise(LocalDate entryDate, String productName);
+    Page<Merchandise> findAllMerchandise(LocalDate entryDate, String productName, Pageable pageable);
 
-    List<Merchandise> findAllMerchandiseByEntryDate(LocalDate entryDate);
+    Page<Merchandise> findAllMerchandiseByEntryDate(LocalDate entryDate, Pageable pageable);
 
-    List<Merchandise> findAllMerchandiseByProductName(String searchTerm);
+    Page<Merchandise> findAllMerchandiseByProductName(String searchTerm, Pageable pageable);
 
     void deleteMerchandise(Long id, Long merchandiseId);
-
 
 }
