@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MerchandiseServiceImpl implements MerchandiseService {
@@ -38,7 +37,7 @@ public class MerchandiseServiceImpl implements MerchandiseService {
 
     public void validateMerchandiseDoesNotExist(String productName) {
         if (merchandiseRepository.existsByProductName(productName)) {
-            throw new RequestException(HttpStatus.BAD_REQUEST, "The merchandise already exists");
+            throw new RequestException(HttpStatus.BAD_REQUEST, "The merchandise " + productName + " already exists");
         }
     }
 
@@ -93,7 +92,7 @@ public class MerchandiseServiceImpl implements MerchandiseService {
     @Override
     public Merchandise findById(Long merchandiseId) {
         return merchandiseRepository.findById(merchandiseId)
-                .orElseThrow(() ->new  RequestException(HttpStatus.NOT_FOUND, "Merchandise" + merchandiseId + "not found"));
+                .orElseThrow(() ->new  RequestException(HttpStatus.NOT_FOUND, "Merchandise by id:" + merchandiseId + " not found"));
     }
 
 

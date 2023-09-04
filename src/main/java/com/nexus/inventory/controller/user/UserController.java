@@ -2,7 +2,6 @@ package com.nexus.inventory.controller.user;
 
 import com.nexus.inventory.dtos.user.UserDTO;
 import com.nexus.inventory.model.user.User;
-import com.nexus.inventory.service.position.PositionService;
 import com.nexus.inventory.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,9 +16,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private PositionService positionService;
 
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {

@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
     private void validateUserDoesNotExist(String userName) {
         if (userRepository.existsByName(userName)) {
-            throw new RequestException(HttpStatus.BAD_REQUEST, "The user already exists");
+            throw new RequestException(HttpStatus.BAD_REQUEST, "The user " + userName + " already exists");
         }
     }
 
