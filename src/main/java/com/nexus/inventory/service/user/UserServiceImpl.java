@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
         return optionalPosition.orElseThrow(() -> new RequestException(HttpStatus.BAD_REQUEST, "The position does not exist"));
     }
 
-    private LocalDate getValidJoinDate(LocalDate joinDate) {
+    LocalDate getValidJoinDate(LocalDate joinDate) {
         LocalDate currentDate = LocalDate.now();
         if (joinDate == null || joinDate.isAfter(currentDate)) {
             throw new RequestException(HttpStatus.BAD_REQUEST, "Invalid joinDate");
@@ -109,4 +109,6 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.deleteById(userId);
     }
+
+
 }

@@ -1,6 +1,5 @@
 package com.nexus.inventory.controller.position;
 
-import com.nexus.inventory.exceptions.RequestException;
 import com.nexus.inventory.model.position.Position;
 import com.nexus.inventory.service.position.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;

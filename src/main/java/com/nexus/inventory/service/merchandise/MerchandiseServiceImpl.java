@@ -103,7 +103,7 @@ public class MerchandiseServiceImpl implements MerchandiseService {
         if (entryDate != null) {
             return findAllMerchandiseByEntryDate(entryDate, pageable);
         } else if (productName != null) {
-            return findAllMerchandiseByProductName(productName, pageable);
+            return findAllMerchandiseBySearchTerm(productName, pageable);
         } else {
             return findAllMerchandiseWithPageable(pageable);
         }
@@ -119,7 +119,6 @@ public class MerchandiseServiceImpl implements MerchandiseService {
     }
 
 
-
     public Page<Merchandise> findAllMerchandiseByEntryDate(LocalDate entryDate, Pageable pageable) {
         Page<Merchandise> merchandisePage = merchandiseRepository.findByEntryDate(entryDate, pageable);
         if (merchandisePage.isEmpty()) {
@@ -129,8 +128,8 @@ public class MerchandiseServiceImpl implements MerchandiseService {
     }
 
     @Override
-    public Page<Merchandise> findAllMerchandiseByProductName(String searchTerm, Pageable pageable) {
-        Page<Merchandise> merchandisePage = merchandiseRepository.findByProductName(searchTerm, pageable);
+    public Page<Merchandise> findAllMerchandiseBySearchTerm(String searchTerm, Pageable pageable) {
+        Page<Merchandise> merchandisePage = merchandiseRepository.findBySearchTerm(searchTerm, pageable);
         if (merchandisePage.isEmpty()) {
             throw new RequestException(HttpStatus.NOT_FOUND, "No merchandise exists for the provided productName or userName");
         }

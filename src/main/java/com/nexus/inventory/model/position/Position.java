@@ -1,11 +1,14 @@
 package com.nexus.inventory.model.position;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.Hibernate;
+
+import java.util.Objects;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "position")
 public class Position {
@@ -16,4 +19,5 @@ public class Position {
 
     @Column(name = "jobTitle")
     private String jobTitle;
+
 }

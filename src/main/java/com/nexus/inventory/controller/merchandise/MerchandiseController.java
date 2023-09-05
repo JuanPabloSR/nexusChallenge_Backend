@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -49,8 +48,6 @@ public class MerchandiseController {
         Page<Merchandise> merchandisePage = merchandiseService.findAllMerchandise(entryDate, searchTerm, pageable);
         return new ResponseEntity<>(merchandisePage, HttpStatus.OK);
     }
-
-
 
 
     @DeleteMapping("/{merchandiseId}")

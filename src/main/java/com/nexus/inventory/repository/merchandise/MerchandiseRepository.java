@@ -15,5 +15,5 @@ public interface MerchandiseRepository extends JpaRepository<Merchandise, Long> 
     Page<Merchandise> findByEntryDate(LocalDate entryDate, Pageable pageable);
 
     @Query("SELECT m FROM Merchandise m WHERE LOWER(m.productName) LIKE LOWER(concat('%', :searchTerm, '%')) OR LOWER(m.registeredBy.name) LIKE LOWER(concat('%', :searchTerm, '%'))")
-    Page<Merchandise> findByProductName(@Param("searchTerm") String searchTerm, Pageable pageable);
+    Page<Merchandise> findBySearchTerm(@Param("searchTerm") String searchTerm, Pageable pageable);
 }
