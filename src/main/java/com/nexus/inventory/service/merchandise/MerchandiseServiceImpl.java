@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 public class MerchandiseServiceImpl implements MerchandiseService {
@@ -43,7 +42,7 @@ public class MerchandiseServiceImpl implements MerchandiseService {
         }
     }
 
-    private User getUserOrThrow(Long userId) {
+    User getUserOrThrow(Long userId) {
         User user = userService.findById(userId);
         if (user == null) {
             throw new RequestException(HttpStatus.NOT_FOUND, "The user with ID " + userId + " does not exist");
@@ -51,7 +50,7 @@ public class MerchandiseServiceImpl implements MerchandiseService {
         return user;
     }
 
-    private LocalDate getValidEntryDate(LocalDate entryDate) {
+    LocalDate getValidEntryDate(LocalDate entryDate) {
         LocalDate currentDate = LocalDate.now();
         if (entryDate == null || entryDate.isAfter(currentDate)) {
             throw new RequestException(HttpStatus.BAD_REQUEST, "Invalid entryDate");
@@ -99,16 +98,24 @@ public class MerchandiseServiceImpl implements MerchandiseService {
     }
 
 
-    public Page<Merchandise> findAllMerchandise(LocalDate entryDate, String productName, Pageable pageable) {
-        if (entryDate != null) {
+    public Page<Merchandise> findAllMerchandise(LocalDate entryDate, String searchTerm, Pageable pageable) {
+        if (entryDate != null && searchTerm != null) {
+            return findAllMerchandiseByEntryDateAndSearchTerm(entryDate, searchTerm, pageable);
+        } else if (entryDate != null) {
             return findAllMerchandiseByEntryDate(entryDate, pageable);
-        } else if (productName != null) {
-            return findAllMerchandiseBySearchTerm(productName, pageable);
-        } else {
-            return findAllMerchandiseWithPageable(pageable);
+        } else if (searchTerm != null) {
+            return findAllMerchandiseBySearchTerm(searchTerm, pageable);
         }
+        return findAllMerchandiseWithPageable(pageable);
     }
 
+    public Page<Merchandise> findAllMerchandiseByEntryDateAndSearchTerm(LocalDate entryDate, String searchTerm, Pageable pageable) {
+        Page<Merchandise> merchandisePage = merchandiseRepository.findByEntryDateAndSearchTerm(entryDate, searchTerm, pageable);
+        if (merchandisePage.isEmpty()) {
+            throw new RequestException(HttpStatus.NOT_FOUND, "No merchandise exists for the provided entryDate and searchTerm");
+        }
+        return merchandisePage;
+    }
 
     private Page<Merchandise> findAllMerchandiseWithPageable(Pageable pageable) {
         Page<Merchandise> merchandisePage = merchandiseRepository.findAll(pageable);
@@ -117,7 +124,6 @@ public class MerchandiseServiceImpl implements MerchandiseService {
         }
         return merchandisePage;
     }
-
 
     public Page<Merchandise> findAllMerchandiseByEntryDate(LocalDate entryDate, Pageable pageable) {
         Page<Merchandise> merchandisePage = merchandiseRepository.findByEntryDate(entryDate, pageable);
@@ -135,7 +141,6 @@ public class MerchandiseServiceImpl implements MerchandiseService {
         }
         return merchandisePage;
     }
-
 
     @Override
     public void deleteMerchandise(Long merchandiseId, Long userId) {

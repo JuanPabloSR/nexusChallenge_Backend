@@ -16,4 +16,7 @@ public interface MerchandiseRepository extends JpaRepository<Merchandise, Long> 
 
     @Query("SELECT m FROM Merchandise m WHERE LOWER(m.productName) LIKE LOWER(concat('%', :searchTerm, '%')) OR LOWER(m.registeredBy.name) LIKE LOWER(concat('%', :searchTerm, '%'))")
     Page<Merchandise> findBySearchTerm(@Param("searchTerm") String searchTerm, Pageable pageable);
+
+    @Query("SELECT m FROM Merchandise m WHERE m.entryDate = :entryDate AND (LOWER(m.productName) LIKE LOWER(concat('%', :searchTerm, '%')) OR LOWER(m.registeredBy.name) LIKE LOWER(concat('%', :searchTerm, '%')))")
+    Page<Merchandise> findByEntryDateAndSearchTerm(@Param("entryDate") LocalDate entryDate, @Param("searchTerm") String searchTerm, Pageable pageable);
 }

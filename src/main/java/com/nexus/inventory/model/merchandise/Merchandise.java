@@ -3,13 +3,15 @@ package com.nexus.inventory.model.merchandise;
 
 import com.nexus.inventory.model.user.User;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "merchandise")
 public class Merchandise {

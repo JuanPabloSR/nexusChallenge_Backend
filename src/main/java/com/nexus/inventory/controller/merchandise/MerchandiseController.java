@@ -56,6 +56,4 @@ public class MerchandiseController {
         merchandiseService.deleteMerchandise(merchandiseId, userId);
         return new ResponseEntity<>("Merchandise successfully deleted", HttpStatus.OK);
     }
-
-
 }

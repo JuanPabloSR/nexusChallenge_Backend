@@ -1,12 +1,12 @@
 package com.nexus.inventory.dtos.merchandise;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class MerchandiseDTO {
 
     private String productName;

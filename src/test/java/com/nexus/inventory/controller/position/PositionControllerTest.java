@@ -36,6 +36,7 @@ class PositionControllerTest {
     @MockBean
     private PositionService positionService;
 
+
     @Test
     void testGetAllPositions() throws Exception {
         List<Position> positions = new ArrayList<>();

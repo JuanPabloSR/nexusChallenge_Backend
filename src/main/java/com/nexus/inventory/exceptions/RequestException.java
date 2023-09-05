@@ -1,9 +1,13 @@
 package com.nexus.inventory.exceptions;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class RequestException extends RuntimeException {
     private HttpStatus status;
 
